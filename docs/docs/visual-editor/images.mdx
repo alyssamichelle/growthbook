@@ -11,19 +11,31 @@ import CommercialFeature from '@site/src/components/CommercialFeature';
 
 <CommercialFeature feature="visual-editor" />
 
-Images are some of the highest-impact A/B tests you can run — hero photography, product imagery, illustration style. The [Visual Editor](/app/visual) gives you three ways to swap an image in a variation:
+Images are some of the highest-impact A/B tests you can run: hero photography, product imagery, illustration style. The [Visual Editor](/app/visual) gives you three ways to swap an image in a variation:
 
-1. **Upload** — drop in a file from your machine.
-2. **AI generation** — describe the image and let a configured AI model produce it, optionally using the existing image as a reference.
+1. **Upload** — drop in a file from your machine. GrowthBook hosts it on a CDN automatically.
+2. **AI generation** — describe the image and let a configured AI model produce it, optionally using the **current image as visual reference**.
 3. **Library** — pick from images your organization has already uploaded or generated, reusable across experiments and projects.
 
-All three paths land in the same `<img>` (or `<picture>`) replacement and are managed identically in the [Changes panel](/app/visual/manual-mode#change-list).
+When you upload or accept a generated image, GrowthBook stores it in org-scoped storage and serves it from a CDN-backed URL. You do not need to host variation assets yourself.
+
+:::note Image models and pixel dimensions
+
+AI image models choose aspect ratio and rough size from the original image. You cannot pass exact pixel dimensions (e.g. "generate at 1200×630") in the prompt. Resize in [Manual mode](/app/visual/manual-mode) after accepting if you need precise dimensions.
+
+:::
+
+All three paths land in the same `<img>` (or `<picture>`) replacement and are managed identically in the Changes panel.
+
+[alyssa record a video for this section: replace a hero image via Upload, then via AI, then pick the same asset from Library.]
 
 ## Replacing an image
 
 Open the [Visual Editor](/app/visual/install-and-connect) and target the page you want to edit. Select the `<img>` element you want to replace.
 
 In Manual mode, the property panel shows an **Image** group with three tabs: **Upload**, **AI**, and **Library**.
+
+[alyssa insert a screenshot of exactly this feature here: Image property group with Upload / AI / Library tabs on a selected `<img>`.]
 
 ### Upload tab
 
@@ -82,7 +94,9 @@ Why quarantine? Image generation produces a lot of throwaway candidates. We don'
 
 ## Available image models
 
-The model used for AI generation is set by your org admin in [AI Settings](/integrations/ai). The current options are:
+The model used for AI generation is set by your org admin in **Settings → General → AI Settings** under **Visual editor image model**. Self-hosted orgs can choose the model; Cloud uses GrowthBook-managed defaults. See [AI model and brand settings](/app/visual/ai-mode#ai-model-and-brand-settings).
+
+The current options are:
 
 | Provider | Model                                | Reference image |
 | -------- | ------------------------------------ | --------------- |

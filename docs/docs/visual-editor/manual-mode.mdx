@@ -11,7 +11,13 @@ import CommercialFeature from '@site/src/components/CommercialFeature';
 
 <CommercialFeature feature="visual-editor" />
 
-Manual mode is the point-and-click editor inside the [Visual Editor side panel](/app/visual). Click an element on your page, and you get structured controls for everything you can change on it — content, typography, background and border, spacing, and visibility — plus an escape hatch for arbitrary CSS and JavaScript.
+Manual mode is the point-and-click editor inside the [Visual Editor side panel](/app/visual). Click an element on your page, and you get structured controls for content, typography, background and border, spacing, and visibility. You also get escape hatches for arbitrary CSS and JavaScript.
+
+This is the **precision layer** of the Visual Editor. Use it when you know exactly what to change, when you are fine-tuning an [AI mode](/app/visual/ai-mode) draft, or when the change is too small to bother prompting ("set padding to 12px").
+
+Every change you make is listed in the **Changes panel** at the bottom of the side panel. You can review, revert, or edit individual changes before saving the variation. Nothing is hidden.
+
+[alyssa record a video for this section: pick an element, change copy and a style, accept into the Changes panel.]
 
 Manual mode is the right choice when:
 
@@ -27,10 +33,12 @@ Switch to the **Manual** tab in the side panel. With the panel open, hover any e
 A sticky bar at the top of the side panel shows what's currently selected (its tag, classes, and a short selector path). You can:
 
 - **Pick a different element** — click another element on the page, or click the picker icon in the sticky bar.
-- **Navigate nearby** — use the "tree" icon to navigate to nearby elements. See below
+- **Navigate nearby** — use the tree icon to navigate to nearby elements. See below.
 - **Deselect** — click the x on the right side of the selected bar or pick another element to deselect the current one.
 
-### Detailed Selector
+[alyssa insert a screenshot of exactly this feature here: sticky selection bar with tag, classes, picker, tree navigation, and deselect controls.]
+
+### Detailed selector
 
 <MaxWidthImage maxWidth={300}>
   ![The GrowthBook Visual Editor detailed selector](/images/visual-editor/ve-detailed-selector.png)
@@ -43,6 +51,15 @@ children. Hover over the path to see it selected on the page.
 ## Property groups
 
 Once you've selected an element, the panel fills with collapsible property groups. Each group corresponds to a category of change.
+
+### Changes panel
+
+The **Changes panel** lists every edit in the current variation: text swaps, style updates, image replacements, global CSS, and custom JS. Each row shows what changed and on which selector.
+
+- **Revert** a single change without undoing the whole variation.
+- **Switch variations** with the variation dropdown above the panel to confirm you are editing the right arm of the test.
+
+[alyssa insert a screenshot of exactly this feature here: Changes panel with multiple change types listed and the variation switcher visible.]
 
 ### Content
 
@@ -178,7 +195,13 @@ waitFor(".my-element").then((el) => {
 });
 ```
 
-Custom JS requires extra CSP changes on your site — see [Deploying to Production → CSP](/app/visual#content-security-policy-csp-changes) on the landing page.
+Custom JS requires extra CSP changes on your site. See [Content Security Policy](/app/visual/running-on-your-site#content-security-policy-csp) on the SDK setup page.
+
+:::caution JavaScript does not un-run
+
+Custom JavaScript stays active for the current page session. Effects can remain visible when you move between elements until you refresh the tab. Prefer DOM mutations for declarative edits when possible.
+
+:::
 
 ## Next steps
 

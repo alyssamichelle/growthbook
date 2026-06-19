@@ -327,9 +327,22 @@ export default {
           label: "Feature Flag Experiments",
         },
         {
-          type: "doc",
-          id: "visual-editor",
+          type: "category",
           label: "Visual Editor",
+          link: {
+            type: "doc",
+            id: "visual-editor",
+          },
+          items: [
+            "visual-editor/install-and-connect",
+            "visual-editor/ai-mode",
+            "visual-editor/manual-mode",
+            "visual-editor/images",
+            "visual-editor/running-on-your-site",
+            "visual-editor/preview-and-qa",
+            "visual-editor/troubleshooting",
+            "visual-editor/legacy",
+          ],
         },
         {
           type: "doc",

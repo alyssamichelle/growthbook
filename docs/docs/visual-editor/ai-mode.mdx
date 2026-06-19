@@ -1,7 +1,7 @@
 ---
 draft: true
 title: AI Mode — Generate A/B Test Variations With AI
-description: Use natural language to generate A/B test variations with GrowthBook's AI-powered visual editor. Describe a change, preview the proposed edits, and accept or edit them — no CSS selectors required.
+description: Use natural language to generate A/B test variations with GrowthBook's AI-powered visual editor. Describe a change, preview the proposed edits, and accept or edit them. No CSS selectors required.
 sidebar_label: AI mode
 slug: /app/visual/ai-mode
 ---
@@ -11,25 +11,27 @@ import CommercialFeature from '@site/src/components/CommercialFeature';
 
 <CommercialFeature feature="ai-suggestions" />
 
-AI mode is the fastest way to draft an A/B test variation in the [Visual Editor](/app/visual). You describe what you want in plain English ("make the hero headline more urgent and the primary button green"), and the AI proposes specific DOM-level changes — element selectors, new content, new styles — that you can preview, accept, edit, or reject one at a time.
+AI mode is the core of GrowthBook's **AI-based Visual Editor**. Describe what you want in plain English ("make the hero headline more urgent and the primary button green"), and the editor proposes specific changes to text, images, buttons, and styles. You preview each proposal live, then accept, edit, or reject it before anything is saved to the variation.
+
+The goal is **better UX than before**, not a full redesign. Describe the outcome you want ("more urgent," "more premium," "less cluttered") and let the AI propose concrete edits. If you ask for an entire page overhaul, results will be unfocused and hard to ship as a clean experiment.
 
 <MaxWidthImage maxWidth={300}>
   ![The GrowthBook Visual Editor AI Editor](/images/visual-editor/ve-ai-chat.png)
 </MaxWidthImage>
 
-It's especially good for:
+AI mode is especially good for:
 
+- Changing **text, images, buttons**, and layout from a single prompt
 - Multi-property changes ("make this card more premium") without touching each control
-- Change text content without needing to find the right content field in the property panel
-- Less technical users who don't want to think about CSS selectors
+- Teammates who do not want to think about CSS selectors or the manual property panel
 
-You can mix AI mode and [Manual mode](/app/visual/manual-mode) freely within the same variation — accept the AI's draft, then jump into Manual mode to fine-tune.
+You can mix AI mode and [Manual mode](/app/visual/manual-mode) freely within the same variation. Accept the AI's draft, then jump into Manual mode to fine-tune.
 
 ## Prerequisites
 
 Before AI mode is usable on your account:
 
-1. **An org admin needs to configure an AI provider.** Go to **Settings → AI** in GrowthBook and add an OpenAI, Google, or xAI API key. See [AI Integrations](/integrations/ai) for the full setup.
+1. **An org admin needs to configure an AI provider.** Go to **Settings → General → AI Settings** in GrowthBook and add an OpenAI, Google, or xAI API key. See [AI Integrations](/integrations/ai) for the full setup.
 2. **Your plan must include AI features.** AI mode is part of the `ai-suggestions` commercial feature. Pro and Enterprise plans include it; Free does not.
 3. **You need to be connected** to your GrowthBook account in the [Visual Editor side panel](/app/visual/install-and-connect).
 
@@ -47,23 +49,33 @@ The AI panel has three parts:
 
 When the chat log is empty, the prompt area also surfaces a few **suggested prompts** and **quick actions** to help you get started.
 
+[alyssa insert a screenshot of exactly this feature here: empty AI chat with suggested prompts and quick actions visible.]
+
+[alyssa fill out more here: list the default suggested prompts and quick actions shipped in the product, or note if they vary by page type.]
+
 ## Writing good prompts
 
-The AI does its best work when prompts are concrete about _what_ and _where_, but loose about _how_.
+The AI does its best work when you describe **intent and location**, not implementation details.
 
 **Good:**
 
 - `Change the hero headline to something more urgent and benefit-led`
 - `Make the primary CTA button bright green and a little larger`
 - `Hide the secondary nav links on the right`
-- `Swap the hero image for one showing a person using a laptop in a coffee shop`
-- `Give me three alternative headlines for the product card`
+- `Make this card feel more premium without changing the layout`
 
 **Less good:**
 
 - `Make the page better` — too vague; the AI will guess and the result will be unfocused.
+- `Redesign the entire homepage` — out of scope for a single visual experiment. Break the idea into smaller tests.
 
-A few tips that consistently improve results:
+### Nebulous prompts
+
+You do not have to spell out every CSS property. Prompts like "make this feel more playful" or "this section looks dated" are valid starting points. The AI interprets intent and proposes specific edits you can accept, reject, or refine in a follow-up turn.
+
+We are still learning which prompt styles work best across teams. Expect the experience to keep improving as we collect feedback and tune models.
+
+**Tips that consistently improve results:**
 
 - **Name the element by what it is, not how it's coded.** "The hero headline" works; ".hero h1" rarely needs to be in the prompt.
 - **Describe intent.** "More urgent," "more premium," "more playful" gives the AI a direction.
@@ -90,6 +102,8 @@ Both are designed to help less technical users get past the blank prompt box.
 Below the prompt box is a **Select element** button (with an `@` icon). Click it and then click any element on the page — that element gets pinned to your prompt as **context**. A small chip appears above the prompt box showing what you picked. You can pin multiple elements, and remove individual chips with the **×** on each chip.
 
 When you send a prompt with elements pinned, the AI treats those elements as the **authoritative target** for the change. Your prompt describes _what to do_; the chips tell the AI _where to do it_.
+
+Pinning elements scopes the AI's attention. It does **not** restrict the AI to only those elements for the rest of the session. You can still ask for page-wide changes in a later turn without re-pinning.
 
 This is one of the most powerful features of AI mode, and it's worth using whenever:
 
@@ -144,7 +158,9 @@ When the AI returns, it adds an assistant card to the chat log. The card contain
 - A short summary of what was changed and why.
 - One or more **diff cards** — each represents a single DOM change (a text edit, a style change, an attribute change, etc.). The diff card shows the element it targets and what's being set.
 
-Each proposed change is **previewed live on the page** as soon as it lands — you don't have to accept first to see the result.
+Each proposed change is **previewed live on the page** as soon as it lands. You do not have to accept first to see the result.
+
+[alyssa insert a screenshot of exactly this feature here: AI assistant card with diff cards and Accept / Reject / Edit controls while the page preview is updated.]
 
 For each change you can:
 
@@ -154,16 +170,44 @@ For each change you can:
 
 Reject doesn't end the conversation. You can ask for a different version ("more subtle — keep the original color, just bump the size") and the AI will produce a new proposal.
 
-## Selector grounding
+## Selector grounding and SPAs
 
-When the AI proposes a change, it picks a CSS selector and validates it against the actual page DOM. If the selector doesn't match a real element, the change is rejected before it ever reaches you.
+When the AI proposes a change, it picks a CSS selector and validates it against the actual page DOM. If the selector does not match a real element, the change is rejected before it reaches you.
 
-This matters for two reasons:
+We prefer **stable selectors** (semantic tags, durable classes, `data-*` attributes) over brittle ones (deep `nth-child` chains, framework hash classes). That matters on **single-page apps**: when React, Vue, or similar frameworks re-render the DOM, the GrowthBook SDK watches for those mutations and **re-applies** your variation to matching elements. See [How variations stick on dynamic pages](/app/visual/running-on-your-site#how-variations-stick-on-dynamic-pages).
 
-- **Reliability** — the AI can't propose changes against elements that don't exist or that match nothing.
-- **Stability** — the AI prefers stable selectors (semantic tags, stable classes, `data-*` attributes) over brittle ones (positional `nth-child` chains, random hash-suffix classes). The variation is more likely to keep working as your site evolves.
+If a proposal looks wrong, you can usually fix it by either (a) saying so in the next prompt ("you targeted the footer headline — I meant the hero"), or (b) picking the right element manually first and re-asking.
 
-If a proposal looks wrong, you can usually fix it by either (a) saying so in the next prompt ("you targeted the footer headline — I meant the hero"), or (b) picking the right element manually first and re-asking — the editor uses the selected element as additional context.
+## Learning from past experiments
+
+:::info Coming soon
+
+This capability is rolling out. Availability may vary by org.
+
+:::
+
+Soon, AI mode will reference **past experiments in your organization** when you ask questions like "what worked on the pricing page before?" or "try something similar to our signup test." The editor learns from your team's history and suggests improvements informed by those prior tests.
+
+The AI uses experiment names, hypotheses, and visual change patterns to inform direction. It does **not** quote raw conversion numbers or revenue in the chat. Use suggestions as inspiration, then review and accept changes like any other AI proposal.
+
+[alyssa fill out more here: document the exact UI entry point and example prompts once this ships broadly.]
+
+## Figma import
+
+:::warning Not production-ready
+
+Figma import is experimental and not recommended for production experiments yet.
+
+:::
+
+Figma import lets you bring a design into the editor as a starting point. Today it works by pulling **exported images** from Figma and rebuilding layout in the page. It does **not** import your production React/Vue components or design-system code.
+
+That tradeoff means:
+
+- **Faster mockups** for "what if we tried this layout?" exploration.
+- **More cleanup** before launch compared to editing the live page directly.
+
+Generic HTML insertion into `document.body` can fight the SDK's mutation observer (insert → observer fires → re-insert → loop). The Figma flow uses **custom JavaScript** for imports to avoid that loop. [alyssa fill out more here: document the Figma import UI once it is customer-ready.]
 
 ## Multi-turn conversations
 
@@ -186,6 +230,51 @@ If you ask the AI to swap a hero image, generate product imagery, or anything el
 
 See [Images](/app/visual/images) for a full walk-through, including the list of supported image models and which ones accept reference images.
 
+## AI model and brand settings
+
+Org admins configure Visual Editor AI behavior under **Settings → General → AI Settings**, in the **Visual Editor** section.
+
+<MaxWidthImage>
+  ![Visual Editor AI settings in GrowthBook: brand guidelines, text model, and image model](/images/visual-editor/ve-ai-settings.png)
+</MaxWidthImage>
+
+### Brand guidelines / additional context
+
+Free-text context prepended to **every** Visual Editor AI call: text edits in the extension and image generation. Use it to steer tone, palette, and CTA rules without repeating them in each prompt.
+
+Example:
+
+```
+We're a B2B SaaS company. Brand colors: #6E56CF and #1F2D5C.
+Sentence-case CTAs. Friendly but professional tone.
+```
+
+Available on **GrowthBook Cloud and self-hosted**.
+
+### Visual editor text model
+
+Controls which model powers AI chat edits and suggestions in the extension. Leave **Use default AI model** to inherit the org-wide default from the same settings page.
+
+| Deployment | Can override text model? |
+| ---------- | ---------------------- |
+| **Self-hosted** | Yes. Pick any model your org has API keys for. Useful when the default feels too literal on vague prompts; a more capable model often interprets intent better at higher cost. |
+| **GrowthBook Cloud** | No. Cloud uses GrowthBook-managed models. This dropdown is not shown. |
+
+### Visual editor image model
+
+Controls which model generates images in the extension. Models that support **reference images** can use the current on-page image as visual context (the "use current image" flow). Text-only models generate from the prompt alone.
+
+| Deployment | Can override image model? |
+| ---------- | ----------------------- |
+| **Self-hosted** | Yes. Choose from supported image models (e.g. Gemini, Imagen, DALL·E, GPT Image). |
+| **GrowthBook Cloud** | No. Cloud uses GrowthBook-managed defaults. |
+
+See [Images → Available image models](/app/visual/images#available-image-models) for the full list and reference-image support.
+
+Click **Save All** at the bottom of the settings page after changing any of these fields.
+
+See [AI Integrations](/integrations/ai) for provider API keys and the org-wide default model.
+
 ## What gets sent to the AI
 
 For each prompt, the back-end sends to the configured AI provider:
@@ -199,10 +288,14 @@ Your GrowthBook experiment metadata, metric values, user data, and SDK payloads 
 
 ## Limits and caveats
 
-- **Single-page scope.** AI mode reasons about the page currently loaded in the Visual Editor's target URL. It can't propose changes against pages it hasn't seen.
-- **Selectors can still drift.** Even with selector grounding, large site rewrites or design-system changes can break previously-stable selectors. Run a sanity check on long-running visual experiments after major releases.
-- **Quality varies by model.** The org admin picks the underlying model in AI Settings — bigger/newer models generally produce better proposals at higher cost. The same prompt will produce different output across `gpt-4o-mini`, `gemini-2.5-pro`, and `grok-2`.
-- **AI mode is not a substitute for review.** Always preview the variation on a real page (and ideally a real preview link) before publishing.
+- **Single-page scope.** AI mode reasons about the page currently loaded in the Visual Editor's target URL. It cannot propose changes against pages it has not seen.
+- **Not a redesign tool.** Keep experiments focused. One headline, one hero, one CTA at a time ships cleaner than "redo everything."
+- **Selectors can still drift.** Large site rewrites or design-system changes can break previously stable selectors. Re-check long-running experiments after major releases.
+- **Custom JS does not "un-run."** JavaScript injected for a variation stays active until you refresh the page or navigate away. You may see JS-driven effects persist between elements until reload. Prefer DOM mutations for declarative changes when possible.
+- **DOM mutations vs. JS on the same element.** If both target the same selector and attribute, the mutation observer wins and can overwrite one-shot JS. The AI avoids emitting both; if you add JS manually, do not also mutate the same property.
+- **Image models cannot take exact pixel dimensions.** Models pick aspect ratio and size heuristically from the original image. Override dimensions afterward in Manual mode if needed.
+- **Quality varies by model.** Bigger models handle vague prompts better but cost more. Self-hosted admins can change models; Cloud uses managed defaults.
+- **AI mode is not a substitute for review.** Always preview on a real page (and a preview link) before publishing.
 
 ## Next steps
 

@@ -11,9 +11,11 @@ import CommercialFeature from '@site/src/components/CommercialFeature';
 
 <CommercialFeature feature="visual-editor" />
 
-When the [Visual Editor](/app/visual) doesn't behave as expected, this page lists the most common causes and fixes. Each item is independently linkable — share the anchor in support threads.
+When the [Visual Editor](/app/visual) doesn't behave as expected, this page lists the most common causes and fixes. Each item is independently linkable. Share the anchor in support threads.
 
-If your issue isn't here, the **Debug Panel** in the Visual Editor (see [Preview and QA](/app/visual/preview-and-qa#the-debug-panel)) is the single best diagnostic tool. Open it before filing a support ticket.
+[alyssa fill out more here: add 2–3 internal support tickets or Slack themes that aren't covered yet.]
+
+If your issue isn't here, the **Debug Panel** in the Visual Editor is the single best diagnostic tool. Open it before filing a support ticket. See [Preview and QA](/app/visual/preview-and-qa#the-debug-panel).
 
 ## Variation isn't showing on my site
 
@@ -39,8 +41,17 @@ You're hitting `?experiment-id=1` but seeing variation 0. In order of likelihood
 When you hover an element, the blue highlight selects an ancestor or sibling instead of what you wanted:
 
 - Use the **parent/child controls** in the sticky bar at the top of the side panel to drill up or down the DOM tree.
-- For elements stacked on top of each other (z-index), the picker grabs the topmost. Hold a modifier key (Alt on macOS, Shift on Windows) while clicking to cycle through elements at the same point.
-- Some interactive elements (open dropdowns, hover menus) close as soon as you move the mouse to the side panel. Use the **Interactive Mode** toggle to keep them open while you select.
+
+[alyssa fill out more here: confirm the modifier-key cycle behavior (Alt/Shift) and whether Interactive Mode still exists in the new editor. Update or remove the bullets below once verified.]
+
+- For elements stacked on top of each other (z-index), hold a modifier key (Alt on macOS, Shift on Windows) while clicking to cycle through elements at the same point.
+- For open dropdowns or hover menus, use the **Interactive Mode** toggle to keep them open while you select.
+
+## Custom JS changes look "stuck" until refresh
+
+Custom JavaScript injected for a variation does not automatically undo when you select a different element in the editor. Refresh the tab to clear JS side effects and preview from a clean state.
+
+DOM mutation changes (text, styles, classes) revert normally when you reject or revert them in the Changes panel.
 
 ## Changes flicker on page load (FOOC)
 
@@ -65,7 +76,7 @@ Modern responsive images use `srcset` and `<picture>` markup. If a plain `src` r
 
 AI mode requires:
 
-- **An AI provider key configured** by an org admin in **Settings → AI**. See [AI Integrations](/integrations/ai).
+- **An AI provider key configured** by an org admin in **Settings → General → AI Settings**. See [AI Integrations](/integrations/ai).
 - **A plan that includes the `ai-suggestions` commercial feature.** Free plans don't include AI.
 - **An active connection** in the side panel — sign in if you've been signed out.
 
